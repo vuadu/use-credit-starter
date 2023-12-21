@@ -1,4 +1,4 @@
-.root {
+/* .root {
   @apply bg-white text-zinc-800 cursor-pointer inline-flex px-10 rounded-sm leading-6  transition ease-in-out duration-150 shadow-sm font-semibold text-center justify-center uppercase py-4 border border-transparent items-center;
 }
 
@@ -29,4 +29,45 @@
   -webkit-transform: translateZ(0);
   -webkit-perspective: 1000;
   -webkit-backface-visibility: hidden;
+}
+ */
+
+.root {
+  @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50;
+}
+
+.variant-default {
+  @apply bg-primary text-primary-foreground shadow hover:bg-primary/90;
+}
+
+.variant-destructive {
+  @apply bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90;
+}
+
+.variant-outline {
+  @apply border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground;
+}
+
+.variant-secondary {
+  @apply bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80;
+}
+
+.variant-ghost {
+  @apply hover:bg-accent hover:text-accent-foreground;
+}
+
+.size-default {
+  @apply h-9 px-4 py-2;
+}
+
+.size-sm {
+  @apply h-8 rounded-md px-3 text-xs;
+}
+
+.size-lg {
+  @apply h-10 rounded-md px-8;
+}
+
+.size-icon {
+  @apply h-9 w-9;
 }

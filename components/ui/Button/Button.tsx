@@ -1,65 +1,73 @@
 'use client';
 
-import cn from 'classnames';
-import React, { forwardRef, useRef, ButtonHTMLAttributes } from 'react';
-import { mergeRefs } from 'react-merge-refs';
-
-import LoadingDots from '@/components/ui/LoadingDots';
-
 import styles from './Button.module.css';
+import LoadingDots from '@/components/ui/LoadingDots';
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import cn from 'classnames';
+import * as React from 'react';
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'slim' | 'flat';
-  active?: boolean;
-  width?: number;
-  loading?: boolean;
-  Component?: React.ComponentType;
-}
-
-const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
-  const {
-    className,
-    variant = 'flat',
-    children,
-    active,
-    width,
-    loading = false,
-    disabled = false,
-    style = {},
-    Component = 'button',
-    ...rest
-  } = props;
-  const ref = useRef(null);
-  const rootClassName = cn(
-    styles.root,
-    {
-      [styles.slim]: variant === 'slim',
-      [styles.loading]: loading,
-      [styles.disabled]: disabled
+const buttonVariants = cva(styles.root, {
+  variants: {
+    variant: {
+      default: styles['variant-default'],
+      destructive: styles['variant-destructive'],
+      outline: styles['variant-outline'],
+      secondary: styles['variant-secondary'],
+      ghost: styles['variant-ghost'],
+      link: styles['variant-link']
     },
-    className
-  );
-  return (
-    <Component
-      aria-pressed={active}
-      data-variant={variant}
-      ref={mergeRefs([ref, buttonRef])}
-      className={rootClassName}
-      disabled={disabled}
-      style={{
-        width,
-        ...style
-      }}
-      {...rest}
-    >
-      {children}
-      {loading && (
-        <i className="flex pl-2 m-0">
-          <LoadingDots />
-        </i>
-      )}
-    </Component>
-  );
+    size: {
+      default: styles['size-default'],
+      sm: styles['size-sm'],
+      lg: styles['size-lg'],
+      icon: styles['size-icon']
+    }
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default'
+  }
 });
 
-export default Button;
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  children?: React.ReactNode;
+  loading?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      children,
+      loading = false,
+      ...props
+    },
+    ref
+  ) => {
+    const Comp = asChild ? Slot : 'button';
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      >
+        {children}
+        {loading && (
+          <i className="flex pl-2 m-0">
+            <LoadingDots />
+          </i>
+        )}
+      </Comp>
+    );
+  }
+);
+Button.displayName = 'Button';
+
+export { Button, buttonVariants };

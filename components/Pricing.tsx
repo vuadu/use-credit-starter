@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { Database } from '@/types_db';
 import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
@@ -74,10 +74,10 @@ export default function Pricing({
 
   if (!products.length)
     return (
-      <section className="bg-black">
+      <section className="bg-background">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center"></div>
-          <p className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
+          <p className="text-4xl font-extrabold text-primary sm:text-center sm:text-6xl">
             No subscription pricing plans found. Create them in your{' '}
             <a
               className="text-pink-500 underline"
@@ -96,19 +96,19 @@ export default function Pricing({
 
   if (products.length === 1)
     return (
-      <section className="bg-black">
+      <section className="bg-background">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center">
-            <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
+            <h1 className="text-4xl font-extrabold text-primary sm:text-center sm:text-6xl">
               Pricing Plans
             </h1>
-            <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
+            <p className="max-w-2xl m-auto mt-5 text-xl text-muted-foreground sm:text-center sm:text-2xl">
               Start building for free, then add a site plan to go live. Account
               plans unlock additional features.
             </p>
             <div className="relative flex self-center mt-12 border rounded-lg bg-zinc-900 border-zinc-800">
               <div className="border border-pink-500 border-opacity-50 divide-y rounded-lg shadow-sm bg-zinc-900 divide-zinc-600">
-                <div className="p-6 py-2 m-1 text-2xl font-medium text-white rounded-md shadow-sm border-zinc-800 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8">
+                <div className="p-6 py-2 m-1 text-2xl font-medium text-primary rounded-md shadow-sm border-zinc-800 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-ring focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8">
                   {products[0].name}
                 </div>
               </div>
@@ -139,12 +139,10 @@ export default function Pricing({
                       </p>
                       <p className="mt-4 text-zinc-300">{price.description}</p>
                       <Button
-                        variant="slim"
-                        type="button"
                         disabled={false}
                         loading={priceIdLoading === price.id}
                         onClick={() => handleCheckout(price)}
-                        className="block w-full py-2 mt-12 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900 "
+                        className="block w-full mt-12 text-sm "
                       >
                         {products[0].name ===
                         subscription?.prices?.products?.name
@@ -163,26 +161,26 @@ export default function Pricing({
     );
 
   return (
-    <section className="bg-black">
+    <section className="bg-background">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
         <div className="sm:flex sm:flex-col sm:align-center">
-          <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
+          <h1 className="text-4xl font-extrabold text-primary sm:text-center sm:text-6xl">
             Pricing Plans
           </h1>
-          <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
+          <p className="max-w-2xl m-auto mt-5 text-xl text-accent-foreground sm:text-center sm:text-2xl">
             Start building for free, then add a site plan to go live. Account
             plans unlock additional features.
           </p>
-          <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
+          <div className="relative self-center mt-6 bg-secondary rounded-lg p-0.5 flex sm:mt-8 border border-border">
             {intervals.includes('month') && (
               <button
                 onClick={() => setBillingInterval('month')}
                 type="button"
                 className={`${
                   billingInterval === 'month'
-                    ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
-                    : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
-                } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
+                    ? 'relative w-1/2 bg-background border-zinc-800 shadow-sm text-primary'
+                    : 'ml-0.5 relative w-1/2 border border-transparent text-muted-foreground'
+                } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-ring focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
               >
                 Monthly billing
               </button>
@@ -193,9 +191,9 @@ export default function Pricing({
                 type="button"
                 className={`${
                   billingInterval === 'year'
-                    ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
-                    : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
-                } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
+                    ? 'relative w-1/2 bg-background border-zinc-800 shadow-sm text-primary'
+                    : 'ml-0.5 relative w-1/2 border border-transparent text-muted-foreground'
+                } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-ring focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
               >
                 Yearly billing
               </button>
@@ -217,36 +215,39 @@ export default function Pricing({
               <div
                 key={product.id}
                 className={cn(
-                  'rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
+                  'rounded-lg shadow divide-y divide-zinc-600 bg-card border border-border',
                   {
-                    'border border-pink-500': subscription
+                    'border border-ring': subscription
                       ? product.name === subscription?.prices?.products?.name
                       : product.name === 'Freelancer'
                   }
                 )}
               >
                 <div className="p-6">
-                  <h2 className="text-2xl font-semibold leading-6 text-white">
+                  <h2 className="text-2xl font-semibold leading-6 text-primary">
                     {product.name}
                   </h2>
-                  <p className="mt-4 text-zinc-300">{product.description}</p>
+                  <p className="mt-4 text-muted-foreground">
+                    {product.description}
+                  </p>
                   <p className="mt-8">
-                    <span className="text-5xl font-extrabold white">
+                    <span className="text-5xl font-extrabold text-primary">
                       {priceString}
                     </span>
-                    <span className="text-base font-medium text-zinc-100">
+                    <span className="text-base font-medium text-primary">
                       /{billingInterval}
                     </span>
                   </p>
+
                   <Button
-                    variant="slim"
-                    type="button"
-                    disabled={!session}
                     loading={priceIdLoading === price.id}
+                    disabled={!session}
                     onClick={() => handleCheckout(price)}
-                    className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
+                    className="block w-full mt-12 text-sm "
                   >
-                    {subscription ? 'Manage' : 'Subscribe'}
+                    {products[0].name === subscription?.prices?.products?.name
+                      ? 'Manage'
+                      : 'Subscribe'}
                   </Button>
                 </div>
               </div>
@@ -262,7 +263,7 @@ export default function Pricing({
 function LogoCloud() {
   return (
     <div>
-      <p className="mt-24 text-xs uppercase text-zinc-400 text-center font-bold tracking-[0.3em]">
+      <p className="mt-24 text-xs uppercase text-secondary-foreground text-center font-bold tracking-[0.3em]">
         Brought to you by
       </p>
       <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-5">
@@ -271,7 +272,7 @@ function LogoCloud() {
             <img
               src="/nextjs.svg"
               alt="Next.js Logo"
-              className="h-12 text-white"
+              className="h-12 text-primary invert dark:invert-0"
             />
           </a>
         </div>
@@ -280,7 +281,7 @@ function LogoCloud() {
             <img
               src="/vercel.svg"
               alt="Vercel.com Logo"
-              className="h-6 text-white"
+              className="h-6 text-primary invert dark:invert-0"
             />
           </a>
         </div>
@@ -289,7 +290,7 @@ function LogoCloud() {
             <img
               src="/stripe.svg"
               alt="stripe.com Logo"
-              className="h-12 text-white"
+              className="h-12 text-primary invert dark:invert-0"
             />
           </a>
         </div>
@@ -298,7 +299,7 @@ function LogoCloud() {
             <img
               src="/supabase.svg"
               alt="supabase.io Logo"
-              className="h-10 text-white"
+              className="h-10 text-primary invert dark:invert-0"
             />
           </a>
         </div>
@@ -307,7 +308,7 @@ function LogoCloud() {
             <img
               src="/github.svg"
               alt="github.com Logo"
-              className="h-8 text-white"
+              className="h-8 text-primary invert dark:invert-0"
             />
           </a>
         </div>

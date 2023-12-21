@@ -1,0 +1,23 @@
+.sidebar {
+  @apply w-[240px] shrink-0 py-10;
+}
+
+.menu_item {
+  @apply flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-primary;
+}
+
+.menu_item.active {
+  @apply bg-accent text-primary;
+}
+
+.menu_icon {
+  @apply h-4 w-4 shrink-0;
+}
+
+.menu_label {
+  @apply translate-y-[0.5px] text-sm font-medium;
+}
+
+.menu_section {
+  @apply pl-3 text-sm font-medium text-muted-foreground/50;
+}

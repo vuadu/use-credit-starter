@@ -1,12 +1,16 @@
 import CreditComponent from '../CreditComponent';
-import s from './Navbar.module.css';
-import SignOutButton from './SignOutButton';
+import s from './ChatNavbar.module.css';
 import { createServerSupabaseClient } from '@/app/supabase-server';
 import Logo from '@/components/icons/Logo';
+import SignOutButton from '@/components/ui/Navbar/SignOutButton';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import Link from 'next/link';
 
-export default async function Navbar() {
+interface Props {
+  title: string;
+}
+
+export default async function Navbar({ title }: Props) {
   const supabase = createServerSupabaseClient();
   const {
     data: { user }
@@ -17,30 +21,10 @@ export default async function Navbar() {
       <a href="#skip" className="sr-only focus:not-sr-only">
         Skip to content
       </a>
-      <div className="max-w-6xl px-6 mx-auto">
+      <div className="mx-auto">
         <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
           <div className="flex items-center flex-1">
-            <Link href="/" className={s.logo} aria-label="Logo">
-              <Logo />
-            </Link>
-            <nav className="hidden ml-6 space-x-2 lg:block">
-              <Link href="/" className={s.link}>
-                Pricing
-              </Link>
-              {user && (
-                <>
-                  <Link href="/account" className={s.link}>
-                    Account
-                  </Link>
-                  <Link href="/settings" className={s.link}>
-                    Settings
-                  </Link>
-                  <Link href="/chat" className={s.link}>
-                    Chat
-                  </Link>
-                </>
-              )}
-            </nav>
+            <p className="font-medium">{title}</p>
           </div>
           <div className="flex justify-end flex-1 space-x-8">
             {user ? (

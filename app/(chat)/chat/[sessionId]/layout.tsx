@@ -14,7 +14,7 @@ const ChatDetailLayout = ({
   );
   const title = session ? session.name : 'Chat';
   return (
-    <div className="w-full overflow-auto relative">
+    <div className="w-full h-screen overflow-clip relative flex flex-col">
       <ChatNavbar title={title} />
       {children}
     </div>

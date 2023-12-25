@@ -1,5 +1,5 @@
 import { CHAT_SESSIONS } from './sample-data';
-import { ChatSideBar } from '@/components/ui/ChatSideBar';
+import { ChatSideBar } from '@/components/ui/Chat/ChatSideBar';
 import { ChatSession } from '@/types';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';

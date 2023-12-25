@@ -1,5 +1,5 @@
 .root {
-  @apply sticky top-0 z-40 h-16 w-full bg-primary-foreground px-8 transition-all duration-150 md:h-20;
+  @apply z-40 h-16 w-full bg-primary-foreground px-8 transition-all duration-150 md:h-20;
 }
 
 .link {

@@ -1,4 +1,4 @@
-import { ChatSession } from '@/types';
+import { ChatSession, ChatRequest } from '@/types';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -80,3 +80,24 @@ const sortTimeGroups = (a: string, b: string): number => {
 
   return 0;
 };
+
+export const getResponseContent = (r: ChatRequest) =>
+  _(r.resp_body_chunks ?? [])
+    .flatMap((lines) => lines.split(/\r?\n/))
+    .flatMap((line) => (line.trim() ? [line] : []))
+    .map((c) => {
+      try {
+        const json = JSON.parse(c);
+        console.log(json);
+        return json?.message?.content ?? json.choices[0].message.content;
+      } catch (e) {
+        try {
+          const json = JSON.parse(c.split('data:')[1]);
+          return json?.message?.content ?? json.choices[0].delta.content;
+        } catch (e) {
+          // console.error(c);
+          return '';
+        }
+      }
+    })
+    .join('');

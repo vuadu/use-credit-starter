@@ -1,4 +1,4 @@
-import CreditComponent from '../CreditComponent';
+import CreditComponent from '../../CreditComponent';
 import s from './ChatNavbar.module.css';
 import { createServerSupabaseClient } from '@/app/supabase-server';
 import Logo from '@/components/icons/Logo';

@@ -1,14 +1,19 @@
 import { CHAT_SESSIONS } from './sample-data';
+import { ChatContextProvider } from '@/app/context/ChatContext';
+import { getSession } from '@/app/supabase-server';
 import { ChatSideBar } from '@/components/ui/Chat/ChatSideBar';
-import { ChatSession } from '@/types';
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
-const ChatLayout = ({ children }: { children: React.ReactNode }) => {
+const ChatLayout = async ({ children }: { children: React.ReactNode }) => {
+  const authSession = await getSession();
+
+  const userId = authSession?.user.id as string;
   return (
     <div className="flex h-[100vh] bg-primary-foreground">
-      <ChatSideBar sessions={CHAT_SESSIONS} />
-      {children}
+      <ChatContextProvider userId={userId}>
+        <ChatSideBar />
+        {children}
+      </ChatContextProvider>
     </div>
   );
 };

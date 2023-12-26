@@ -5,25 +5,17 @@ import { Message } from '@/components/ui/Chat';
 import { ChatInput } from '@/components/ui/Chat/ChatInput/ChatInput';
 import { queue as newQueue } from '@/server/Chat';
 import { Metadata, ChatRequest } from '@/types';
-import { getOrCreateSession, queue } from '@/utils/actions';
 import { getResponseContent } from '@/utils/chat';
 import _ from 'lodash';
 import React from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
 const PageDetail = ({ params }: { params: { sessionId: string } }) => {
-  const [input, setInput] = React.useState<string>('');
-  // const [sessionId, setSessionId] = React.useState<string | undefined>();
-  // React.useEffect(() => {
-  //   getOrCreateSession().then(setSessionId);
-  // }, []);
+  // const [input, setInput] = React.useState<string>('');
   const sId = params.sessionId ? params.sessionId : undefined;
-
   const textboxRef = React.useRef<HTMLTextAreaElement>(null); //use to focus
 
   const { state, connected } = useCreditSession<Metadata>(sId);
-
-  console.log('state: ', state);
 
   const context = React.useMemo(
     () =>
@@ -49,13 +41,12 @@ const PageDetail = ({ params }: { params: { sessionId: string } }) => {
 
   const onSend = React.useCallback(
     (message: { content: string; role: 'assistant' | 'user' }) => {
-      console.log('message: ', message);
       const input = message.content;
       newQueue(input, context, sId).then((res) => {
-        console.log('queue res: ', res);
+        textboxRef.current?.focus();
       });
     },
-    [input, context]
+    [context]
   );
 
   return (

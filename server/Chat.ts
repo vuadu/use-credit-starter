@@ -220,5 +220,5 @@ export const createSession = async (userId: string) => {
   console.log('new session', res);
   const sessionId = res.data.id;
 
-  return sessionId;
+  return res.data;
 };

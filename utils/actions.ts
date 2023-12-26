@@ -57,7 +57,8 @@ export async function getOrCreateSession() {
 
 export async function queue(
   input: string,
-  context: { role: 'user' | 'assistant'; content: string }[]
+  context: { role: 'user' | 'assistant'; content: string }[],
+  sId?: string
 ) {
   console.log('input data', input);
   const customerRef = getCustomerRef();
@@ -71,17 +72,6 @@ export async function queue(
     },
     body: JSON.stringify({
       data: {
-        // attributes: {
-        //   customer_ref: customerRef,
-        //   session_id: sessionId,
-        //   req_url: "https://65780a8d197926adf62f5c35.mockapi.io/uesrs",
-        //   req_body: { name: args },
-        //   req_method: "post",
-        //   req_headers: {
-        //     "content-type": "application/json",
-        //   },
-        // },
-
         attributes: {
           customer_ref: customerRef,
           session_id: sessionId,

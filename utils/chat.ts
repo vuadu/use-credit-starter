@@ -1,6 +1,7 @@
 import { ChatSession, ChatRequest } from '@/types';
 import _ from 'lodash';
 import moment from 'moment';
+import { usePathname } from 'next/navigation';
 
 type TimeGroupedSessions = Record<string, ChatSession[]>;
 

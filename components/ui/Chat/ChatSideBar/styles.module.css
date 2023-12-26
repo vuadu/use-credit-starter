@@ -1,9 +1,9 @@
 .sidebar {
-  @apply w-[240px] shrink-0 bg-background px-2 py-10;
+  @apply relative w-[240px] shrink-0 bg-background px-2;
 }
 
 .menu_item {
-  @apply flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-primary;
+  @apply flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-primary;
 }
 
 .menu_item.active {

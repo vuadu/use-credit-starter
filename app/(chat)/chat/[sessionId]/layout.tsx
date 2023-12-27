@@ -13,7 +13,7 @@ const ChatDetailLayout = async ({
 }) => {
   return (
     <div className="w-full h-full max-h-full flex flex-col">
-      <ChatNavbar title={'Ask me anything'} />
+      <ChatNavbar sessionId={params.sessionId} />
       {children}
     </div>
   );

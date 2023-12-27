@@ -7,7 +7,7 @@ import { ChatInput } from '@/components/ui/Chat/ChatInput/ChatInput';
 import { queue as newQueue } from '@/server/Chat';
 import { Metadata, ChatRequest } from '@/types';
 import { getResponseContent } from '@/utils/chat';
-import _, { get, set } from 'lodash';
+import _, { get, set, size } from 'lodash';
 import React, { useEffect, useContext, useState } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
@@ -55,6 +55,21 @@ const PageDetail = ({ params }: { params: { sessionId: string } }) => {
       }) ?? [];
 
     setContext(newContext);
+    if (_.size(state?.active_requests) === 0) {
+      textboxRef.current?.focus();
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (
+      _.size(state?.session.requests) === 1 &&
+      getSessionName(sId as string) === null &&
+      state?.session.requests[0].status === 'finished'
+    ) {
+      const topicPrompt = `Generate name based on the first 2 messages in this conversation. The topic is maximized to 7 words.`;
+      console.log('current context', context);
+      newQueue(topicPrompt, context, sId, true);
+    }
   }, [state]);
 
   const onSend = React.useCallback(
@@ -64,10 +79,11 @@ const PageDetail = ({ params }: { params: { sessionId: string } }) => {
         textboxRef.current?.focus();
       });
       if (context.length === 0) {
-        const topicPrompt = `Generate name of this conversation based on question: "${input}" . The topic is maximized to 7 words.`;
-        newQueue(topicPrompt, context, sId, true).then((res) => {
-          console.log('topicPrompt', res);
-        });
+        // const topicPrompt = `Generate name of this conversation based on question: "${input}" . The topic is maximized to 7 words.`;
+        // console.log('current context', context);
+        // newQueue(topicPrompt, context, sId, true).then((res) => {
+        //   console.log('topicPrompt', res);
+        // });
       }
     },
     [context]

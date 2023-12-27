@@ -27,7 +27,7 @@ export const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
       }
     };
     return (
-      <div className="w-full px-4 xl:max-w-3xl shrink-0 mx-auto pb-4 bg-primary-foreground">
+      <div className="w-full px-4 xl:max-w-3xl shrink-0 mx-auto pb-4 bg-primary-foreground relative">
         <Textarea
           ref={props.textboxRef}
           rows={1}
@@ -37,7 +37,6 @@ export const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
           onChange={(e) => onChange(e)}
           onKeyDown={(e) => onEnter(e)}
           disabled={props.isAsking}
-          autoFocus
         />
         <Button
           variant={currentMessage !== '' ? 'default' : 'outline'}

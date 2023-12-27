@@ -1,5 +1,6 @@
 import CreditComponent from '../../CreditComponent';
 import s from './ChatNavbar.module.css';
+import { ChatTitle } from './ChatTitle';
 import { createServerSupabaseClient } from '@/app/supabase-server';
 import Logo from '@/components/icons/Logo';
 import SignOutButton from '@/components/ui/Navbar/SignOutButton';
@@ -7,10 +8,10 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import Link from 'next/link';
 
 interface Props {
-  title: string;
+  sessionId: string;
 }
 
-export default async function Navbar({ title }: Props) {
+export default async function Navbar({ sessionId }: Props) {
   const supabase = createServerSupabaseClient();
   const {
     data: { user }
@@ -24,7 +25,8 @@ export default async function Navbar({ title }: Props) {
       <div className="mx-auto">
         <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
           <div className="flex items-center flex-1">
-            <p className="font-medium">{title}</p>
+            {/* <p className="font-medium">{title}</p> */}
+            <ChatTitle sessionId={sessionId} />
           </div>
           <div className="flex justify-end flex-1 space-x-8">
             {user ? (

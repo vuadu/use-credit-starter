@@ -89,7 +89,7 @@ export const getResponseContent = (r: ChatRequest) =>
     .map((c) => {
       try {
         const json = JSON.parse(c);
-        console.log(json);
+
         return json?.message?.content ?? json.choices[0].message.content;
       } catch (e) {
         try {

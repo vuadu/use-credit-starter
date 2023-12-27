@@ -7,7 +7,7 @@ import { ChatInput } from '@/components/ui/Chat/ChatInput/ChatInput';
 import { queue as newQueue } from '@/server/Chat';
 import { Metadata, ChatRequest } from '@/types';
 import { getResponseContent } from '@/utils/chat';
-import _, { get, set, size } from 'lodash';
+import _ from 'lodash';
 import React, { useEffect, useContext, useState } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
@@ -67,7 +67,6 @@ const PageDetail = ({ params }: { params: { sessionId: string } }) => {
       state?.session.requests[0].status === 'finished'
     ) {
       const topicPrompt = `Generate name based on the first 2 messages in this conversation. The topic is maximized to 7 words.`;
-      console.log('current context', context);
       newQueue(topicPrompt, context, sId, true);
     }
   }, [state]);
@@ -78,13 +77,6 @@ const PageDetail = ({ params }: { params: { sessionId: string } }) => {
       newQueue(input, context, sId).then((res) => {
         textboxRef.current?.focus();
       });
-      if (context.length === 0) {
-        // const topicPrompt = `Generate name of this conversation based on question: "${input}" . The topic is maximized to 7 words.`;
-        // console.log('current context', context);
-        // newQueue(topicPrompt, context, sId, true).then((res) => {
-        //   console.log('topicPrompt', res);
-        // });
-      }
     },
     [context]
   );

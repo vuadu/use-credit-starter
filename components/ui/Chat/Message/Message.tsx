@@ -66,23 +66,23 @@ const MarkdownComponents: Components = {
 
 export const Message = ({
   role,
-  children,
   content
 }: {
   role: 'assistant' | 'user';
-  children: React.ReactNode;
   content: string;
 }) => {
   return (
     <div
       className={`${
         role === 'assistant'
-          ? 'justify-self-start bg-background'
+          ? 'justify-self-start bg-background text-primary'
           : 'justify-self-end bg-accent'
       } max-w-[75%] rounded-2xl p-4 `}
     >
-      <ReactMarkdown className="prose" components={MarkdownComponents}>
-        {/* {children} */}
+      <ReactMarkdown
+        className="prose prose-slate text-primary prose-strong:text-primary prose-strong:font-bold dark:prose-invert"
+        components={MarkdownComponents}
+      >
         {content}
       </ReactMarkdown>
     </div>

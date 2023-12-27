@@ -119,7 +119,8 @@ export async function getOrCreateSession() {
 export async function queue(
   input: string,
   context: { role: 'user' | 'assistant'; content: string }[],
-  sId?: string
+  sId?: string,
+  isGettingTopic?: boolean
 ) {
   const customerRef = getCustomerRef();
   const authSession = await getSession();
@@ -128,7 +129,8 @@ export async function queue(
   }
   const uId = authSession.user.id;
   const sessionId = sId ? sId : await createSession(uId);
-  console.log('context', context);
+  console.log('context length', context.length);
+  const isTopic = isGettingTopic ? isGettingTopic : false;
 
   const res = await fetch(`${USE_CREDIT_BASE_URL}/requests`, {
     method: 'POST',
@@ -153,14 +155,14 @@ export async function queue(
             'content-type': 'application/json',
             authorization: `Bearer ${OPENAI_API_KEY}`
           },
-          req_metadata: { input }
+          req_metadata: { input, isGettingTopic: isTopic }
         }
       }
     })
   })
     .then((res) => res.text())
     .then((body) => {
-      console.log('queue', body);
+      // console.log('queue', body);
       return JSON.parse(body);
     });
   return res.data?.id;
@@ -190,6 +192,7 @@ export const getSessions = async () => {
     .then((body) => {
       return JSON.parse(body);
     });
+
   return res.data;
 };
 
@@ -220,5 +223,33 @@ export const createSession = async (userId: string) => {
   console.log('new session', res);
   const sessionId = res.data.id;
 
+  return res.data;
+};
+
+export const updateSessionName = async (sessionId: string, name: string) => {
+  if (!process.env.USE_CREDIT_SECRET) {
+    console.error('USE_CREDIT_SECRET is not defined');
+    return;
+  }
+
+  const res = await fetch(`${USE_CREDIT_BASE_URL}/sessions/${sessionId}`, {
+    method: 'PATCH',
+    headers: {
+      'x-use-credit-api-key': process.env.USE_CREDIT_SECRET ?? '',
+      'content-type': 'application/vnd.api+json'
+    },
+    body: JSON.stringify({
+      data: {
+        attributes: {
+          name
+        }
+      }
+    })
+  })
+    .then((res) => res.text())
+    .then((body) => {
+      return JSON.parse(body);
+    });
+  console.log('update session', res);
   return res.data;
 };

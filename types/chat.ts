@@ -2,7 +2,7 @@ import { Request } from '@/app/hooks/use-credit';
 
 export type ChatSession = {
   id: string;
-  name: string;
+  name: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -26,5 +26,5 @@ export type UserChatData = {
   chatData: ChatSessionWithMessages[];
 };
 
-export type Metadata = { input: string };
+export type Metadata = { input: string; isGettingTopic: boolean };
 export type ChatRequest = Request<Metadata>;

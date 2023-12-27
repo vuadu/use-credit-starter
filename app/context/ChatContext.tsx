@@ -1,8 +1,13 @@
 'use client';
 
-import { getSessions, createSession } from '@/server/Chat';
+import {
+  getSessions,
+  createSession,
+  updateSessionName as syncSessionName
+} from '@/server/Chat';
 import { ChatSession } from '@/types';
 import { categorizeAndSortSessions } from '@/utils/chat';
+import { set } from 'lodash';
 import React, { createContext, useState, useEffect } from 'react';
 
 interface ChatContextType {
@@ -10,6 +15,8 @@ interface ChatContextType {
   chatSessions: ChatSession[];
   isLoaded: boolean;
   addNewSession: () => Promise<ChatSession | null>;
+  updateSessionName: (sessionId: string, name: string) => void;
+  getSessionName: (sessionId: string) => string | null;
 }
 
 // Create the initial chat context
@@ -17,7 +24,9 @@ const initialChatContext: ChatContextType = {
   userRef: '',
   chatSessions: [],
   isLoaded: false,
-  addNewSession: async () => null
+  addNewSession: async () => null,
+  updateSessionName: () => null,
+  getSessionName: () => null
 };
 
 // Create the chat context
@@ -41,7 +50,7 @@ export const ChatContextProvider = ({
       const s: ChatSession[] = res.map((session: any) => {
         return {
           id: session.id,
-          name: session.attributes.name || 'Untitled',
+          name: session.attributes.name || null,
           updatedAt: session.attributes.inserted_at,
           createdAt: session.attributes.inserted_at
         };
@@ -50,12 +59,38 @@ export const ChatContextProvider = ({
     });
   }, []);
 
+  const updateSessionName = async (sessionId: string, name: string) => {
+    const session = chatSessions.find((s) => s.id === sessionId);
+    if (!session) return;
+    if (session.name !== null) return;
+    const n = name.replace(/['"]+/g, '');
+    await syncSessionName(sessionId, n);
+    setChatSessions((prev) =>
+      prev.map((s) => {
+        if (s.id === sessionId) {
+          return { ...s, name: n };
+        } else {
+          return s;
+        }
+      })
+    );
+  };
+
+  const getSessionName = (sessionId: string) => {
+    const s = chatSessions.find((s) => s.id === sessionId);
+    if (s) {
+      return s.name;
+    } else {
+      return null;
+    }
+  };
+
   const addNewSession = async () => {
     const newSession = await createSession(userRef);
     if (newSession) {
       const newS: ChatSession = {
         id: newSession.id,
-        name: newSession.attributes.name || 'Untitled',
+        name: newSession.attributes.name || null,
         updatedAt: newSession.attributes.inserted_at,
         createdAt: newSession.attributes.inserted_at
       };
@@ -71,6 +106,8 @@ export const ChatContextProvider = ({
     <ChatContext.Provider
       value={{
         addNewSession,
+        updateSessionName,
+        getSessionName,
         userRef,
         chatSessions,
         isLoaded

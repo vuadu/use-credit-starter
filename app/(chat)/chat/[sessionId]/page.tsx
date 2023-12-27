@@ -1,43 +1,61 @@
 'use client';
 
+import { ChatContext } from '@/app/context/ChatContext';
 import { Request, useCreditSession } from '@/app/hooks/use-credit';
 import { Message } from '@/components/ui/Chat';
 import { ChatInput } from '@/components/ui/Chat/ChatInput/ChatInput';
 import { queue as newQueue } from '@/server/Chat';
 import { Metadata, ChatRequest } from '@/types';
 import { getResponseContent } from '@/utils/chat';
-import _ from 'lodash';
-import React from 'react';
+import _, { get, set } from 'lodash';
+import React, { useEffect, useContext, useState } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
 const PageDetail = ({ params }: { params: { sessionId: string } }) => {
   // const [input, setInput] = React.useState<string>('');
   const sId = params.sessionId ? params.sessionId : undefined;
   const textboxRef = React.useRef<HTMLTextAreaElement>(null); //use to focus
-
+  const { updateSessionName, getSessionName } = useContext(ChatContext);
   const { state, connected } = useCreditSession<Metadata>(sId);
+  const [context, setContext] = useState<
+    { role: 'user' | 'assistant'; content: string }[]
+  >([]);
 
-  const context = React.useMemo(
-    () =>
-      state?.session.requests?.flatMap(
-        (r) =>
-          [
-            { role: 'user', content: r.req_metadata?.input },
-            { role: 'assistant', content: getResponseContent(r) }
-          ] as const
-      ) ?? [],
-    [state]
-  );
+  useEffect(() => {
+    let newRequests: ChatRequest[] = [];
+    if (state?.session.requests) {
+      state.session.requests.forEach((r) => {
+        if (r.req_metadata?.isGettingTopic === true) {
+          if (r.status === 'finished') {
+            updateSessionName(sId as string, getResponseContent(r));
+          }
+        } else newRequests = [...newRequests, r];
+      });
+    }
 
-  const lastMessage = React.useMemo(
-    () =>
-      _(state?.active_requests ?? {})
+    if (state?.active_requests) {
+      _(state.active_requests)
         .toPairs()
-        .map(([k, v]) => ({ ...v, id: k }))
-        .value()
-        .map((r) => getResponseContent(r))[0],
-    [state]
-  );
+        .forEach(([k, v]) => {
+          const idx = newRequests.findIndex((nr) => nr.id === k);
+          if (idx !== -1) {
+            newRequests[idx] = { ...newRequests[idx], ...v };
+          }
+        });
+    }
+    const newContext =
+      newRequests.flatMap((r) => {
+        return [
+          { role: 'user', content: r.req_metadata?.input },
+          {
+            role: 'assistant',
+            content: getResponseContent(r)
+          }
+        ] as const;
+      }) ?? [];
+
+    setContext(newContext);
+  }, [state]);
 
   const onSend = React.useCallback(
     (message: { content: string; role: 'assistant' | 'user' }) => {
@@ -45,6 +63,12 @@ const PageDetail = ({ params }: { params: { sessionId: string } }) => {
       newQueue(input, context, sId).then((res) => {
         textboxRef.current?.focus();
       });
+      if (context.length === 0) {
+        const topicPrompt = `Generate name of this conversation based on question: "${input}" . The topic is maximized to 7 words.`;
+        newQueue(topicPrompt, context, sId, true).then((res) => {
+          console.log('topicPrompt', res);
+        });
+      }
     },
     [context]
   );
@@ -64,11 +88,6 @@ const PageDetail = ({ params }: { params: { sessionId: string } }) => {
                   {message.content}
                 </Message>
               )
-          )}
-          {_.size(state?.active_requests) > 0 && (
-            <Message role="assistant" content={lastMessage}>
-              {lastMessage}
-            </Message>
           )}
         </div>
         <div className="h-8" />
